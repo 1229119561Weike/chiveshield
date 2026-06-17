@@ -4,7 +4,8 @@
 
 [简体中文](./README.md) | [English](./README.en.md)
 
-**Online Demo / Website**: <https://chiveshield-mvp.vercel.app>  
+**Website / Brand homepage**: <https://chiveshield-intro.vercel.app>  
+**Online Demo / Try it now**: <https://chiveshield-mvp.vercel.app>  
 **Sample report demo**: [HTML report in this repository](./docs/report-demo.html) — download it and open it in a browser.  
 **Credibility benchmark / Awesome List**: [138 real AI procurement sources](./docs/sources.md), covering official pricing, open-source alternatives, procurement risk, negotiation/governance, industry reports, and model evaluation.
 
@@ -14,7 +15,8 @@ The goal is not to attack the AI services industry. The goal is to help buyers a
 
 ## Start here
 
-- **Try it online**: [ChiveShield online demo / website](https://chiveshield-mvp.vercel.app).
+- **Website / brand homepage**: open the [ChiveShield brand site](https://chiveshield-intro.vercel.app) for the hero story, positioning, and open-source entry.
+- **Online Demo / try it now**: open the [ChiveShield app demo](https://chiveshield-mvp.vercel.app) to try the report flow.
 - **Open the sample report**: [`docs/report-demo.html`](./docs/report-demo.html). GitHub does not render this self-contained HTML report directly; download it and open it in a browser.
 - **Use the source library**: [`docs/sources.md`](./docs/sources.md), 138 verified sources for procurement research.
 - **Audit model/API costs**: the table below lists 14 high-signal open-source projects for LLM pricing, token cost calculation, gateway metering, and observability.
@@ -162,7 +164,8 @@ scripts/    build and smoke-test scripts
 
 ## Contact / community
 
-- Online demo / website: <https://chiveshield-mvp.vercel.app>
+- Website / brand homepage: <https://chiveshield-intro.vercel.app>
+- Online Demo / try it now: <https://chiveshield-mvp.vercel.app>
 - GitHub repository: <https://github.com/1229119561Weike/chiveshield>
 
 ![WeChat QR code](docs/assets/wechat-qr.jpg)

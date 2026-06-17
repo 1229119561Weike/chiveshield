@@ -4,7 +4,8 @@
 
 [简体中文](./README.md) | [English](./README.en.md)
 
-**在线 Demo / 官网**：<https://chiveshield-mvp.vercel.app>  
+**官网 / 品牌主页**：<https://chiveshield-intro.vercel.app>  
+**在线 Demo / 立即体验**：<https://chiveshield-mvp.vercel.app>  
 **示例报告 Demo**：[仓库内 HTML](./docs/report-demo.html)（下载后可直接用浏览器打开）  
 **可信度标杆 / Awesome List**：[138 条真实 AI 服务采购信息源](./docs/sources.md)，覆盖官方定价/成本基准、开源 AI 项目、采购避坑/议价/治理、行业报告/模型评测。
 
@@ -14,7 +15,8 @@
 
 ## 第一眼看什么
 
-- **在线体验**：打开 [ChiveShield 在线 Demo / 官网](https://chiveshield-mvp.vercel.app)，体验免费预览、付费解锁入口和本地 demo 报告生成路径。
+- **官网 / 品牌主页**：打开 [ChiveShield 品牌官网](https://chiveshield-intro.vercel.app)，了解避韭针定位、首屏品牌故事和开源入口。
+- **在线 Demo / 立即体验**：打开 [ChiveShield 应用站](https://chiveshield-mvp.vercel.app)，体验免费预览、付费解锁入口和本地 demo 报告生成路径。
 - **示例报告**：查看 [`docs/report-demo.html`](./docs/report-demo.html)。这是 ChiveShield 生成的可视化采购防坑报告 demo；GitHub 不直接渲染 HTML 页面，建议下载后用浏览器打开。
 - **真实来源库**：查看 [`docs/sources.md`](./docs/sources.md)，138 条经过 HTTP 2xx/3xx 检测的采购信息源。
 - **模型成本核验表**：下方直接展示 14 个高 star 开源项目，可用来复算 LLM API、token、网关和可观测性成本。
@@ -164,7 +166,8 @@ scripts/    构建与 smoke 测试脚本
 
 ## 联系 / 交流
 
-- 在线 Demo / 官网：<https://chiveshield-mvp.vercel.app>
+- 官网 / 品牌主页：<https://chiveshield-intro.vercel.app>
+- 在线 Demo / 立即体验：<https://chiveshield-mvp.vercel.app>
 - GitHub 仓库：<https://github.com/1229119561Weike/chiveshield>
 
 ![微信二维码](docs/assets/wechat-qr.jpg)
