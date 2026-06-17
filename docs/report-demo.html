@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChiveShield 示例报告 · 中小企业 AI 客服知识库问答系统</title>
+  <style>
+    :root {
+      --forest: #123f2a;
+      --forest-2: #0f2f21;
+      --sprout: #77b255;
+      --sprout-soft: #dfeedd;
+      --paper: #fbfaf4;
+      --paper-deep: #f1eadc;
+      --ink: #17211b;
+      --muted: #657064;
+      --line: #d8d0bd;
+      --amber: #c98b2b;
+      --amber-soft: #f8e7bf;
+      --risk: #b23b2e;
+      --risk-soft: #f4d8d2;
+      --evidence: #1f5e4a;
+      --panel: #ffffff;
+      --shadow: 0 18px 46px rgba(18, 63, 42, 0.10);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: "Inter", "Helvetica Neue", Arial, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --serif: Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(119,178,85,0.18), transparent 28rem),
+        linear-gradient(90deg, rgba(18,63,42,0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(18,63,42,0.045) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      font-family: var(--sans);
+      line-height: 1.62;
+    }
+
+    a { color: var(--evidence); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--forest); }
+    :focus-visible { outline: 3px solid var(--amber); outline-offset: 4px; }
+
+    .page-shell {
+      width: min(1420px, calc(100% - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 28px;
+      padding: 24px 0 56px;
+    }
+
+    .masthead {
+      grid-column: 1 / -1;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(18,63,42,0.18);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(18,63,42,0.97), rgba(15,47,33,0.92)),
+        var(--forest);
+      color: #fffdf3;
+      box-shadow: var(--shadow);
+    }
+
+    .masthead::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.09) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(90deg, transparent, #000 16%, #000 86%, transparent);
+      pointer-events: none;
+    }
+
+    .masthead-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) 360px;
+      gap: 36px;
+      padding: clamp(28px, 4vw, 58px);
+      align-items: end;
+    }
+
+    .brand-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 50%;
+      background: rgba(251,250,244,0.08);
+      color: #d3efc8;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+    }
+
+    .demo-pill, .source-pill, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: rgba(251,250,244,0.08);
+      color: #eef7e8;
+    }
+
+    .demo-pill::before, .status-pill::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--sprout);
+      box-shadow: 0 0 0 4px rgba(119,178,85,0.18);
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 900px;
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(38px, 6vw, 82px);
+      line-height: .96;
+      letter-spacing: -0.055em;
+      font-weight: 700;
+    }
+
+    .lede {
+      max-width: 820px;
+      margin: 0;
+      color: rgba(255,253,243,0.86);
+      font-size: clamp(17px, 1.8vw, 22px);
+      line-height: 1.55;
+    }
+
+    .hero-card {
+      border-radius: 24px;
+      padding: 22px;
+      background: rgba(251,250,244,0.96);
+      color: var(--ink);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.20);
+    }
+
+    .hero-card .eyebrow, .eyebrow {
+      margin-bottom: 10px;
+      color: var(--forest);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+
+    .strategy {
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--sprout-soft);
+      border: 1px solid rgba(18,63,42,0.14);
+      font-size: 15px;
+    }
+
+    .risk-ruler {
+      margin-top: 18px;
+    }
+
+    .ruler-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 44px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    .track {
+      height: 9px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--sprout-soft), var(--amber-soft), var(--risk-soft));
+      overflow: hidden;
+      border: 1px solid rgba(18,63,42,0.12);
+    }
+
+    .fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--forest);
+    }
+
+    .side-nav {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(251,250,244,0.86);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 34px rgba(18,63,42,0.07);
+    }
+
+    .side-nav strong {
+      display: block;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--forest);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .side-nav a {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .side-nav a:hover, .side-nav a.active {
+      color: var(--forest);
+      background: var(--sprout-soft);
+    }
+
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.70);
+      box-shadow: 0 12px 30px rgba(18,63,42,0.055);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 20px;
+      padding: 24px 26px 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(223,238,221,0.68), rgba(255,255,255,0.28));
+    }
+
+    .section-no {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--forest);
+      letter-spacing: .08em;
+    }
+
+    .section h2 {
+      margin-bottom: 6px;
+      font-family: var(--serif);
+      font-size: clamp(25px, 3vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .section-subtitle {
+      margin: 0;
+      color: var(--muted);
+      max-width: 880px;
+    }
+
+    .section-body { padding: 26px; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+    }
+
+    .quote-box {
+      border-left: 5px solid var(--forest);
+      padding: 18px 20px;
+      background: var(--paper);
+      border-radius: 0 16px 16px 0;
+    }
+
+    .decision-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .decision-list li, .check-item, .talk-item {
+      border: 1px solid rgba(18,63,42,0.14);
+      border-radius: 14px;
+      padding: 14px 15px;
+      background: rgba(251,250,244,0.72);
+    }
+
+    .decision-list li::before {
+      content: "→";
+      display: inline-block;
+      margin-right: 8px;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      min-height: 114px;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--forest);
+      color: #fffdf3;
+    }
+
+    .metric small {
+      display: block;
+      color: rgba(255,253,243,0.68);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .metric b {
+      display: block;
+      margin-top: 10px;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 9px;
+      color: rgba(255,253,243,0.78);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .candidate {
+      position: relative;
+      min-height: 245px;
+      padding: 17px;
+      border: 1px solid rgba(18,63,42,0.16);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(251,250,244,0.82));
+    }
+
+    .candidate h3 {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 10px;
+      font-size: 19px;
+      letter-spacing: -0.025em;
+    }
+
+    .candidate h3 a { color: var(--forest); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--sprout-soft);
+      color: var(--forest);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .candidate p { margin-bottom: 10px; font-size: 14px; }
+    .candidate .note { color: var(--muted); font-size: 13px; }
+
+    .pricing-table-wrap, .source-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      color: var(--forest);
+      background: var(--sprout-soft);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    td.price { font-family: var(--mono); font-weight: 900; color: var(--forest); white-space: nowrap; }
+
+    .price-bars {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .price-bar {
+      display: grid;
+      grid-template-columns: 130px 1fr 150px;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(18,63,42,0.13);
+      background: rgba(255,255,255,0.72);
+    }
+
+    .bar-label { font-weight: 800; color: var(--forest); }
+    .bar-track { height: 18px; border-radius: 999px; background: var(--paper-deep); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--sprout), var(--forest)); }
+    .bar-price { font-family: var(--mono); font-weight: 900; color: var(--forest); }
+
+    .alert-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .alert {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 12px;
+      border: 1px solid rgba(178,59,46,0.22);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(244,216,210,0.45);
+    }
+
+    .alert::before {
+      content: "";
+      width: 10px;
+      height: 100%;
+      min-height: 44px;
+      border-radius: 999px;
+      background: var(--risk);
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .risk-card {
+      border: 1px solid rgba(178,59,46,0.24);
+      border-radius: 17px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(244,216,210,0.62), rgba(255,255,255,0.72));
+    }
+
+    .risk-card h3 {
+      margin-bottom: 9px;
+      color: var(--risk);
+      font-size: 17px;
+    }
+
+    .risk-card dl { margin: 0; }
+    .risk-card dt {
+      margin-top: 10px;
+      color: var(--forest);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .risk-card dd { margin: 3px 0 0; color: var(--ink); font-size: 14px; }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .check-group h3 {
+      margin-bottom: 12px;
+      color: var(--forest);
+    }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .checkmark {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sprout-soft);
+      color: var(--forest);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .talk-list {
+      display: grid;
+      gap: 12px;
+      counter-reset: talk;
+    }
+
+    .talk-item {
+      position: relative;
+      padding-left: 56px;
+      font-size: 15px;
+    }
+
+    .talk-item::before {
+      counter-increment: talk;
+      content: counter(talk, decimal-leading-zero);
+      position: absolute;
+      left: 15px;
+      top: 16px;
+      color: var(--forest);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .source-table-wrap table { min-width: 760px; }
+    .source-table-wrap td:nth-child(1) { font-weight: 800; color: var(--forest); }
+
+    .footnote {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 16px;
+      background: var(--paper-deep);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .audit-rail {
+      position: fixed;
+      right: 18px;
+      top: 50%;
+      z-index: 30;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 8px;
+      padding: 9px;
+      border: 1px solid rgba(18,63,42,0.16);
+      border-radius: 999px;
+      background: rgba(251,250,244,0.86);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 32px rgba(18,63,42,0.12);
+    }
+
+    .audit-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--line);
+      border: 2px solid transparent;
+    }
+    .audit-dot[data-kind="safe"] { background: var(--sprout); }
+    .audit-dot[data-kind="watch"] { background: var(--amber); }
+    .audit-dot[data-kind="risk"] { background: var(--risk); }
+
+    @media (max-width: 1080px) {
+      .page-shell { grid-template-columns: 1fr; }
+      .side-nav { position: relative; top: 0; display: flex; gap: 6px; overflow-x: auto; }
+      .side-nav strong { display: none; }
+      .side-nav a { white-space: nowrap; }
+      .masthead-inner { grid-template-columns: 1fr; }
+      .hero-card { max-width: 620px; }
+      .candidate-grid, .checklist { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .audit-rail { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell { width: min(100% - 20px, 1420px); padding-top: 10px; }
+      .masthead { border-radius: 20px; }
+      .masthead-inner { padding: 24px; }
+      .brand-row { margin-bottom: 20px; }
+      .summary-grid, .metric-strip, .candidate-grid, .alert-list, .risk-grid, .checklist { grid-template-columns: 1fr; }
+      .section-header { grid-template-columns: 1fr; gap: 4px; padding: 20px; }
+      .section-body { padding: 20px; }
+      .price-bar { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(36px, 13vw, 58px); }
+      .metric { min-height: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .side-nav, .audit-rail { display: none; }
+      .page-shell { display: block; width: 100%; padding: 0; }
+      .section, .masthead { box-shadow: none; break-inside: avoid; }
+      a { color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <div class="audit-rail" aria-hidden="true">
+    <span class="audit-dot" data-kind="safe" title="开源候选"></span>
+    <span class="audit-dot" data-kind="watch" title="报价梯度"></span>
+    <span class="audit-dot" data-kind="risk" title="风险信号"></span>
+    <span class="audit-dot" data-kind="safe" title="验收清单"></span>
+    <span class="audit-dot" data-kind="watch" title="议价话术"></span>
+  </div>
+
+  <div class="page-shell">
+    <header class="masthead" id="top">
+      <div class="masthead-inner">
+        <div>
+          <div class="brand-row" aria-label="报告元信息">
+            <span class="mark">CS</span>
+            <span>ChiveShield · 避韭针</span>
+            <span class="demo-pill">示例报告 demo</span>
+            <span class="source-pill">已核验调研素材</span>
+          </div>
+          <h1>中小企业 AI 客服知识库问答系统采购防坑报告</h1>
+          <p class="lede">这份示例展示 ChiveShield 能把一句“想买 AI 客服”的模糊需求，转成可核验的开源候选、报价梯度、风险识别、验收清单和议价话术。报告面向甲方决策，但保持中立：识别水分，也承认合理服务成本。</p>
+        </div>
+        <aside class="hero-card" aria-label="报告决策摘要">
+          <div class="eyebrow">采购策略</div>
+          <div class="strategy"><strong>先 PoC，再标准部署。</strong><br />不建议一开始购买“行业大模型微调”或重型私有化；只有涉及敏感客户数据、多部门权限、CRM/工单联动时，再进入专业/定制级实施。</div>
+          <div class="risk-ruler" aria-label="采购风险标注尺">
+            <div class="ruler-row"><span>开源替代</span><span class="track"><span class="fill" style="width: 86%"></span></span><strong>高</strong></div>
+            <div class="ruler-row"><span>定制必要</span><span class="track"><span class="fill" style="width: 38%"></span></span><strong>中低</strong></div>
+            <div class="ruler-row"><span>报价风险</span><span class="track"><span class="fill" style="width: 72%"></span></span><strong>偏高</strong></div>
+            <div class="ruler-row"><span>验收难度</span><span class="track"><span class="fill" style="width: 63%"></span></span><strong>中</strong></div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <nav class="side-nav" aria-label="报告目录">
+      <strong>报告目录</strong>
+      <a href="#summary">需求判断</a>
+      <a href="#opensource">开源候选</a>
+      <a href="#pricing">成本报价</a>
+      <a href="#risks">风险识别</a>
+      <a href="#acceptance">验收清单</a>
+      <a href="#talk">议价话术</a>
+      <a href="#sources">来源清单</a>
+    </nav>
+
+    <main>
+      <section class="section" id="summary">
+        <div class="section-header">
+          <div class="section-no">01</div>
+          <div>
+            <h2>需求判断：这是 RAG 知识库客服，不是“训练大模型”起步</h2>
+            <p class="section-subtitle">用户要把官网 FAQ、产品说明、售后政策和内部文档接入客服机器人；预算有限，核心应先验证真实问答效果。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="summary-grid">
+            <div class="quote-box">
+              <div class="eyebrow">用户原始需求</div>
+              <p>公司希望把官网 FAQ、产品说明、售后政策和内部知识文档接入一个 AI 客服机器人，能回答客户常见问题，最好能嵌入官网；预算有限，希望先验证效果，担心被高价售卖“自研大模型”或“私有化系统”。</p>
+            </div>
+            <ul class="decision-list">
+              <li>第一阶段：低成本 PoC，验证 30-50 个真实问题的命中率、无答案处理和人工转接。</li>
+              <li>第二阶段：标准部署，接入官网/客服入口，增加知识库更新流程、日志、权限和文档。</li>
+              <li>涉及敏感客户数据、多部门权限、CRM/工单系统联动时，再进入专业/定制级实施。</li>
+            </ul>
+          </div>
+          <div class="metric-strip" aria-label="报告关键数字">
+            <div class="metric"><small>已核验开源候选</small><b>11</b><span>Dify、RAGFlow、AnythingLLM 等可作为采购对照。</span></div>
+            <div class="metric"><small>报价梯度</small><b>3 档</b><span>基础 PoC、标准可用版、旗舰/专业版。</span></div>
+            <div class="metric"><small>真实问题验收</small><b>30-50</b><span>PoC 阶段建议用真实客服问题集验证。</span></div>
+            <div class="metric"><small>硬成本来源</small><b>10</b><span>模型 API、托管、向量库和服务器价格锚点。</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="opensource">
+        <div class="section-header">
+          <div class="section-no">02</div>
+          <div>
+            <h2>开源候选：先用成熟组件对照供应商报价</h2>
+            <p class="section-subtitle">如果供应商基于这些项目配置或二开，应披露组件、License、定制范围和交付物，不应把成熟工具包装成纯自研系统。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="candidate-grid">
+            <article class="candidate"><h3><a href="https://github.com/langgenius/dify">Dify</a><span class="tag">RAG / 工作流</span></h3><p>LLM 应用开发、RAG、工作流、可自部署；适合快速搭建知识库客服 PoC。</p><p class="note">注意：云版和自部署成本、模型 API 成本要拆分；若供应商只是配置 Dify，应披露配置/二开范围。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/infiniflow/ragflow">RAGFlow</a><span class="tag">文档 RAG</span></h3><p>文档解析 + RAG 引擎；对 PDF/文档型知识库更友好，适合产品手册/售后政策场景。</p><p class="note">注意：文档解析质量要用真实样本验收。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/Mintplex-Labs/anything-llm">AnythingLLM</a><span class="tag">轻量自托管</span></h3><p>本地/团队知识库问答；适合中小企业内部知识库和简单客服验证。</p><p class="note">注意：生产级客服入口和权限可能还需二开。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/open-webui/open-webui">Open WebUI</a><span class="tag">聊天 UI</span></h3><p>多模型聊天 UI + 知识库能力；可快速验证“企业 ChatGPT 门户”体验。</p><p class="note">注意：客服工单/渠道接入不是默认完整交付。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/danny-avila/LibreChat">LibreChat</a><span class="tag">多模型平台</span></h3><p>适合企业内部多模型聊天和权限管理需求。</p><p class="note">注意：RAG/客服渠道能力需要按实际功能评估。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/FlowiseAI/Flowise">Flowise</a><span class="tag">可视化流程</span></h3><p>可视化 LLM 工作流；适合让非工程人员看到 RAG/客服流程如何搭建。</p><p class="note">注意：复杂生产系统仍需测试、日志和权限补齐。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/run-llama/llama_index">LlamaIndex</a><span class="tag">RAG 框架</span></h3><p>数据接入、索引、RAG 框架；定制开发时可作为成熟底层框架参考。</p><p class="note">注意：框架不是现成产品，需要工程实现。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/langchain-ai/langchain">LangChain</a><span class="tag">编排生态</span></h3><p>LLM 编排、工具调用、RAG 生态；可判断“自研 RAG 框架”是否其实是常规框架集成。</p><p class="note">注意：需要防止过度抽象导致成本虚高。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/qdrant/qdrant">Qdrant</a><span class="tag">向量库</span></h3><p>向量数据库；适合专业版知识库检索基础设施，可与托管/自部署成本对比。</p><p class="note">注意：小型 PoC 未必需要独立向量数据库集群。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/chroma-core/chroma">Chroma</a><span class="tag">轻量向量库</span></h3><p>适合 PoC 或小型知识库，降低初始部署复杂度。</p><p class="note">注意：大规模生产能力需另评估。</p></article>
+            <article class="candidate"><h3><a href="https://github.com/Unstructured-IO/unstructured">Unstructured</a><span class="tag">文档预处理</span></h3><p>文档解析与预处理；可拆出 PDF/Word/网页文档清洗成本。</p><p class="note">注意：复杂版式仍需人工抽检。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="section-header">
+          <div class="section-no">03</div>
+          <div>
+            <h2>成本与报价：合理报价应该拆开，而不是一句“AI 系统定制”</h2>
+            <p class="section-subtitle">价格为采购决策估算，不是审计或法律结论。核心看供应商是否把需求梳理、文档清洗、配置/二开、模型 API、服务器、测试培训和维护分开说明。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="price-bars" aria-label="三档报价对比">
+            <div class="price-bar"><span class="bar-label">基础 PoC</span><span class="bar-track"><span class="bar-fill" style="width: 24%"></span></span><span class="bar-price">¥3,000 - ¥15,000</span></div>
+            <div class="price-bar"><span class="bar-label">标准可用版</span><span class="bar-track"><span class="bar-fill" style="width: 56%"></span></span><span class="bar-price">¥15,000 - ¥60,000</span></div>
+            <div class="price-bar"><span class="bar-label">旗舰/专业版</span><span class="bar-track"><span class="bar-fill" style="width: 100%"></span></span><span class="bar-price">¥60,000 - ¥200,000+</span></div>
+          </div>
+
+          <div class="pricing-table-wrap">
+            <table>
+              <thead><tr><th>档位</th><th>适用情况</th><th>参考价格区间</th><th>成本拆解</th><th>合理交付</th></tr></thead>
+              <tbody>
+                <tr><td><strong>基础 PoC</strong></td><td>1 个知识库、少量文档、官网嵌入可选，先验证问答效果</td><td class="price">¥3,000 - ¥15,000</td><td>需求梳理 20%；开源工具配置 30%；文档清洗 20%；模型/API 与部署 10%；测试与说明 20%</td><td>可运行 demo、导入 20-100 篇/页资料、30-50 个测试问答、简单部署说明、1 轮调整</td></tr>
+                <tr><td><strong>标准可用版</strong></td><td>小企业真实使用，官网/客服入口接入，知识库可更新</td><td class="price">¥15,000 - ¥60,000</td><td>需求与流程 15%；部署与权限 20%；文档解析/知识库 25%；渠道嵌入 15%；测试/培训/维护 25%</td><td>稳定部署、知识库更新流程、基础权限、日志、官网嵌入、验收用例、使用文档、2-3 轮调整</td></tr>
+                <tr><td><strong>旗舰/专业版</strong></td><td>多知识库、多角色、CRM/工单联动、私有化或合规要求</td><td class="price">¥60,000 - ¥200,000+</td><td>系统集成 25%；私有化/安全 20%；RAG 调优 20%；监控日志 15%；培训运维 20%</td><td>私有/半私有部署、CRM/工单联动、权限分级、审计日志、监控、备份、培训、SLA 与维护协议</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert-list" aria-label="异常报价信号">
+            <div class="alert"><div>¥50,000+ 但不交源码/部署文档/知识库更新流程，只给一个聊天链接。</div></div>
+            <div class="alert"><div>直接推荐“训练行业大模型/微调”但没有说明为什么 RAG 不能满足。</div></div>
+            <div class="alert"><div>把 OpenAI/Claude/Gemini API 调用包装成“自研模型”，不披露模型供应商和调用成本。</div></div>
+            <div class="alert"><div>低价承诺生产级 SLA、CRM 联动、私有化和全年维护，后续加价风险高。</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="risks">
+        <div class="section-header">
+          <div class="section-no">04</div>
+          <div>
+            <h2>风险识别：把“听起来很 AI”的部分拆成可验收证据</h2>
+            <p class="section-subtitle">风险不是为了制造甲乙方对立，而是让服务范围、成本、数据和验收边界更透明。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="risk-grid">
+            <article class="risk-card"><h3>开源工具包装成高价定制</h3><dl><dt>触发信号</dt><dd>不说明 Dify/RAGFlow/AnythingLLM 等组件，只说“自研 AI 客服系统”。</dd><dt>应要求证据</dt><dd>列出开源组件、定制模块、二开代码范围和 License。</dd></dl></article>
+            <article class="risk-card"><h3>模型 API 套壳冒充自研大模型</h3><dl><dt>触发信号</dt><dd>无模型卡、无训练数据、无评测，只说“自研大模型客服”。</dd><dt>应要求证据</dt><dd>模型供应商、API 单价、上下文窗口、限流、替代模型方案。</dd></dl></article>
+            <article class="risk-card"><h3>微调过度销售</h3><dl><dt>触发信号</dt><dd>FAQ/产品文档问答也推荐训练/微调。</dd><dt>应要求证据</dt><dd>说明 RAG、提示词、微调三种路线的成本/效果对比。</dd></dl></article>
+            <article class="risk-card"><h3>文档导入质量虚假承诺</h3><dl><dt>触发信号</dt><dd>承诺“一键导入所有资料”但不做分块、OCR、表格/图片处理验收。</dd><dt>应要求证据</dt><dd>用真实 PDF/网页/表格样本做抽检，要求引用来源和无答案处理。</dd></dl></article>
+            <article class="risk-card"><h3>验收指标模糊</h3><dl><dt>触发信号</dt><dd>只说“回答准确”“智能客服上线”，没有测试集。</dd><dt>应要求证据</dt><dd>约定 30-100 个真实问题、命中率、拒答率、转人工规则。</dd></dl></article>
+            <article class="risk-card"><h3>锁定与迁移风险</h3><dl><dt>触发信号</dt><dd>不交知识库数据、向量数据、聊天记录导出方式。</dd><dt>应要求证据</dt><dd>明确源码、数据库、知识库、日志和账号归属。</dd></dl></article>
+            <article class="risk-card"><h3>数据合规风险</h3><dl><dt>触发信号</dt><dd>客户聊天记录/订单/售后信息进入第三方模型但无说明。</dd><dt>应要求证据</dt><dd>数据脱敏、保留周期、第三方模型供应商、删除机制。</dd></dl></article>
+            <article class="risk-card"><h3>维护费陷阱</h3><dl><dt>触发信号</dt><dd>首单便宜，后续新增文档/改提示词/换模型都另收高价。</dd><dt>应要求证据</dt><dd>约定免费维护期、更新次数、响应时间、超出单价。</dd></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="acceptance">
+        <div class="section-header">
+          <div class="section-no">05</div>
+          <div>
+            <h2>验收清单：上线不是终点，能验才算交付</h2>
+            <p class="section-subtitle">把“智能客服上线”拆成可测试问题、可追溯来源、可导出数据和可维护成本。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="checklist">
+            <div class="check-group"><h3>功能验收</h3><div class="check-item"><span class="checkmark">✓</span><span>能在测试环境访问客服入口，并完成至少 30 个真实问题问答。</span></div><div class="check-item"><span class="checkmark">✓</span><span>每个回答可显示来源文档或至少能追溯知识库来源。</span></div><div class="check-item"><span class="checkmark">✓</span><span>遇到知识库没有答案的问题，能明确说不知道或转人工，不胡编。</span></div><div class="check-item"><span class="checkmark">✓</span><span>支持知识库新增/更新/删除，并说明多久生效。</span></div><div class="check-item"><span class="checkmark">✓</span><span>支持导出知识库原文、配置和聊天记录，或明确说明不支持的原因。</span></div></div>
+            <div class="check-group"><h3>技术验收</h3><div class="check-item"><span class="checkmark">✓</span><span>提供部署文档、环境变量、模型供应商和 API key 配置方式。</span></div><div class="check-item"><span class="checkmark">✓</span><span>明确使用的开源项目、版本、License 和定制代码范围。</span></div><div class="check-item"><span class="checkmark">✓</span><span>明确向量数据库、文件存储、日志和备份方式。</span></div><div class="check-item"><span class="checkmark">✓</span><span>关键密钥不暴露在前端；后台入口有权限控制。</span></div><div class="check-item"><span class="checkmark">✓</span><span>提供故障处理说明：模型超时、API 余额不足、知识库解析失败怎么办。</span></div></div>
+            <div class="check-group"><h3>成本验收</h3><div class="check-item"><span class="checkmark">✓</span><span>报价拆分为需求梳理、文档清洗、配置/二开、模型 API、托管、测试培训、维护。</span></div><div class="check-item"><span class="checkmark">✓</span><span>提供单次问答的 token/API 成本估算口径。</span></div><div class="check-item"><span class="checkmark">✓</span><span>明确免费额度、超额调用、并发/限流和模型替换价格。</span></div><div class="check-item"><span class="checkmark">✓</span><span>维护期内新增文档、改提示词、换模型、接新渠道的收费规则清楚。</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="talk">
+        <div class="section-header">
+          <div class="section-no">06</div>
+          <div>
+            <h2>议价话术：把该问的话写进采购沟通</h2>
+            <p class="section-subtitle">这些问题不是压价，而是帮助双方把开源组件、真实定制、模型成本和验收标准讲清楚。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="talk-list">
+            <div class="talk-item">“这个方案里哪些部分基于 Dify、RAGFlow、AnythingLLM、LangChain/LlamaIndex 等成熟开源组件？哪些是你们真正定制开发？”</div>
+            <div class="talk-item">“能否把费用拆成需求梳理、文档清洗、部署配置、定制开发、模型/API 调用、服务器、维护服务？”</div>
+            <div class="talk-item">“为什么这个需求需要微调或训练模型？如果用 RAG + 现成模型，成本和效果差异是什么？”</div>
+            <div class="talk-item">“验收时我们能否用 50 个真实客服问题测试，并记录回答正确、引用正确、应转人工三类结果？”</div>
+            <div class="talk-item">“如果后续不续费，源码、知识库数据、向量数据、聊天记录和部署账号分别如何交接？”</div>
+            <div class="talk-item">“模型供应商、上下文长度、限流、单价和替代模型方案能否写进交付文档？”</div>
+            <div class="talk-item">“新增文档、更新知识库、修改提示词和增加渠道分别怎么收费？”</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sources">
+        <div class="section-header">
+          <div class="section-no">07</div>
+          <div>
+            <h2>来源清单：报告里的判断必须能追溯</h2>
+            <p class="section-subtitle">以下为本 demo 使用的开源项目、官方价格/成本页面和治理资料。所有外部链接均来自已核验素材。</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="source-table-wrap">
+            <table>
+              <thead><tr><th>来源</th><th>URL</th><th>用途</th></tr></thead>
+              <tbody>
+                <tr><td>Dify</td><td><a href="https://github.com/langgenius/dify">github.com/langgenius/dify</a></td><td>开源 RAG/工作流候选</td></tr>
+                <tr><td>RAGFlow</td><td><a href="https://github.com/infiniflow/ragflow">github.com/infiniflow/ragflow</a></td><td>文档型 RAG 候选</td></tr>
+                <tr><td>AnythingLLM</td><td><a href="https://github.com/Mintplex-Labs/anything-llm">github.com/Mintplex-Labs/anything-llm</a></td><td>轻量知识库候选</td></tr>
+                <tr><td>Open WebUI</td><td><a href="https://github.com/open-webui/open-webui">github.com/open-webui/open-webui</a></td><td>聊天 UI 与知识库体验对照</td></tr>
+                <tr><td>LibreChat</td><td><a href="https://github.com/danny-avila/LibreChat">github.com/danny-avila/LibreChat</a></td><td>多模型聊天平台对照</td></tr>
+                <tr><td>Flowise</td><td><a href="https://github.com/FlowiseAI/Flowise">github.com/FlowiseAI/Flowise</a></td><td>可视化 LLM 工作流候选</td></tr>
+                <tr><td>LlamaIndex</td><td><a href="https://github.com/run-llama/llama_index">github.com/run-llama/llama_index</a></td><td>RAG 定制开发框架对照</td></tr>
+                <tr><td>LangChain</td><td><a href="https://github.com/langchain-ai/langchain">github.com/langchain-ai/langchain</a></td><td>LLM 编排与 RAG 生态对照</td></tr>
+                <tr><td>Qdrant</td><td><a href="https://github.com/qdrant/qdrant">github.com/qdrant/qdrant</a></td><td>向量数据库候选</td></tr>
+                <tr><td>Chroma</td><td><a href="https://github.com/chroma-core/chroma">github.com/chroma-core/chroma</a></td><td>轻量向量数据库候选</td></tr>
+                <tr><td>Unstructured</td><td><a href="https://github.com/Unstructured-IO/unstructured">github.com/Unstructured-IO/unstructured</a></td><td>文档解析与预处理候选</td></tr>
+                <tr><td>Anthropic Claude Pricing</td><td><a href="https://docs.anthropic.com/en/docs/about-claude/pricing">docs.anthropic.com/en/docs/about-claude/pricing</a></td><td>模型 API 成本核验</td></tr>
+                <tr><td>Google Gemini API Pricing</td><td><a href="https://ai.google.dev/gemini-api/docs/pricing">ai.google.dev/gemini-api/docs/pricing</a></td><td>低成本模型方案对照</td></tr>
+                <tr><td>Azure OpenAI Service Pricing</td><td><a href="https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/">azure.microsoft.com/.../openai-service</a></td><td>企业云模型成本对照</td></tr>
+                <tr><td>Dify Pricing</td><td><a href="https://dify.ai/pricing">dify.ai/pricing</a></td><td>Dify 云版与自部署成本边界</td></tr>
+                <tr><td>LiteLLM model prices JSON</td><td><a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">github.com/BerriAI/litellm/.../model_prices...</a></td><td>机器可读模型价格基准</td></tr>
+                <tr><td>tokencost</td><td><a href="https://github.com/AgentOps-AI/tokencost">github.com/AgentOps-AI/tokencost</a></td><td>token 成本复算工具</td></tr>
+                <tr><td>DigitalOcean Pricing</td><td><a href="https://www.digitalocean.com/pricing">digitalocean.com/pricing</a></td><td>轻量自部署服务器成本参考</td></tr>
+                <tr><td>Vercel Pricing</td><td><a href="https://vercel.com/pricing">vercel.com/pricing</a></td><td>前端/报告页/轻后端托管成本参考</td></tr>
+                <tr><td>Pinecone Pricing</td><td><a href="https://www.pinecone.io/pricing/">pinecone.io/pricing</a></td><td>托管向量库成本参考</td></tr>
+                <tr><td>Qdrant Pricing</td><td><a href="https://qdrant.tech/pricing/">qdrant.tech/pricing</a></td><td>开源自部署和托管向量库成本对照</td></tr>
+                <tr><td>OWASP Top 10 for LLM Applications</td><td><a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">owasp.org/www-project-top-10-for-large-language-model-applications</a></td><td>LLM 应用安全风险参考</td></tr>
+                <tr><td>NIST AI Risk Management Framework</td><td><a href="https://www.nist.gov/itl/ai-risk-management-framework">nist.gov/itl/ai-risk-management-framework</a></td><td>AI 风险治理参考</td></tr>
+                <tr><td>Choose a License</td><td><a href="https://choosealicense.com/">choosealicense.com</a></td><td>开源 License 识别参考</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="footnote">调研口径：只引用已校验可访问的开源仓库、官方定价/成本页面和安全治理资料；价格为采购决策估算，不是审计或法律结论。本页面为 ChiveShield 生成报告能力的示例 demo。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const links = Array.from(document.querySelectorAll('.side-nav a'));
+      const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+      const setActive = () => {
+        let current = sections[0];
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top < 160) current = section;
+        }
+        links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + current.id));
+      };
+      setActive();
+      window.addEventListener('scroll', setActive, { passive: true });
+    })();
+  </script>
+</body>
+</html>
