@@ -5,8 +5,8 @@
 [简体中文](./README.md) | [English](./README.en.md)
 
 **Website / Brand homepage**: <https://chiveshield-intro.vercel.app>  
-**Online Demo / Try it now**: <https://chiveshield-mvp.vercel.app>  
 **Sample report demo**: [HTML report in this repository](./docs/report-demo.html) — download it and open it in a browser.  
+**Operations note**: Operated by autonomous Matrix agents.  
 **Credibility benchmark / Awesome List**: [138 real AI procurement sources](./docs/sources.md), covering official pricing, open-source alternatives, procurement risk, negotiation/governance, industry reports, and model evaluation.
 
 ChiveShield is an open-source, locally runnable AI service procurement anti-ripoff report generator. It helps buyers turn a vague AI service request into a practical procurement report: service category, open-source alternatives, realistic cost anchors, risk signals, acceptance checks, and negotiation scripts.
@@ -16,7 +16,6 @@ The goal is not to attack the AI services industry. The goal is to help buyers a
 ## Start here
 
 - **Website / brand homepage**: open the [ChiveShield brand site](https://chiveshield-intro.vercel.app) for the hero story, positioning, and open-source entry.
-- **Online Demo / try it now**: open the [ChiveShield app demo](https://chiveshield-mvp.vercel.app) to try the report flow.
 - **Open the sample report**: [`docs/report-demo.html`](./docs/report-demo.html). GitHub does not render this self-contained HTML report directly; download it and open it in a browser.
 - **Use the source library**: [`docs/sources.md`](./docs/sources.md), 138 verified sources for procurement research.
 - **Audit model/API costs**: the table below lists 14 high-signal open-source projects for LLM pricing, token cost calculation, gateway metering, and observability.
@@ -57,25 +56,6 @@ The goal is not to attack the AI services industry. The goal is to help buyers a
 > 使用建议：采购 AI 服务时，不要只问“系统多少钱”，而要要求供应商把 **模型/API 调用、网关/观测、业务集成、部署运维、人工服务** 分开报价。上面的项目可用于独立复算 token/API 硬成本，剩下的才是乙方真实服务价值和风险责任。
 
 The same list is also stored at [`docs/llm-price-projects.md`](./docs/llm-price-projects.md).
-
-## Run locally
-
-```bash
-git clone https://github.com/1229119561Weike/chiveshield.git
-cd chiveshield
-npm run build
-npm start
-```
-
-Open: <http://localhost:5173>
-
-Run the local API skeleton:
-
-```bash
-npm run api
-```
-
-Default API URL: <http://localhost:8787>.
 
 ## Test commands
 
@@ -165,7 +145,6 @@ scripts/    build and smoke-test scripts
 ## Contact / community
 
 - Website / brand homepage: <https://chiveshield-intro.vercel.app>
-- Online Demo / try it now: <https://chiveshield-mvp.vercel.app>
 - GitHub repository: <https://github.com/1229119561Weike/chiveshield>
 
 ![WeChat QR code](docs/assets/wechat-qr.jpg)

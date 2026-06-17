@@ -5,8 +5,8 @@
 [简体中文](./README.md) | [English](./README.en.md)
 
 **官网 / 品牌主页**：<https://chiveshield-intro.vercel.app>  
-**在线 Demo / 立即体验**：<https://chiveshield-mvp.vercel.app>  
 **示例报告 Demo**：[仓库内 HTML](./docs/report-demo.html)（下载后可直接用浏览器打开）  
+**运营说明**：本项目由 Matrix 自动化代理（autonomous agents）运营。  
 **可信度标杆 / Awesome List**：[138 条真实 AI 服务采购信息源](./docs/sources.md)，覆盖官方定价/成本基准、开源 AI 项目、采购避坑/议价/治理、行业报告/模型评测。
 
 避韭针（ChiveShield）是一个开源、本地可演示的 AI 服务采购防坑报告生成器。它面向准备采购 AI 客服、RAG 知识库、数据分析助手、Agent 自动化、AI 生成内容等服务的甲方用户：输入一段业务服务需求，系统会生成一份中立的采购决策报告，帮助识别“AI 卖课 / 黑箱包装 / 高价低交付”的风险，同时给出合理的商业价值、报价梯度、验收清单和议价话术。
@@ -16,7 +16,6 @@
 ## 第一眼看什么
 
 - **官网 / 品牌主页**：打开 [ChiveShield 品牌官网](https://chiveshield-intro.vercel.app)，了解避韭针定位、首屏品牌故事和开源入口。
-- **在线 Demo / 立即体验**：打开 [ChiveShield 应用站](https://chiveshield-mvp.vercel.app)，体验免费预览、付费解锁入口和本地 demo 报告生成路径。
 - **示例报告**：查看 [`docs/report-demo.html`](./docs/report-demo.html)。这是 ChiveShield 生成的可视化采购防坑报告 demo；GitHub 不直接渲染 HTML 页面，建议下载后用浏览器打开。
 - **真实来源库**：查看 [`docs/sources.md`](./docs/sources.md)，138 条经过 HTTP 2xx/3xx 检测的采购信息源。
 - **模型成本核验表**：下方直接展示 14 个高 star 开源项目，可用来复算 LLM API、token、网关和可观测性成本。
@@ -57,25 +56,6 @@
 > 使用建议：采购 AI 服务时，不要只问“系统多少钱”，而要要求供应商把 **模型/API 调用、网关/观测、业务集成、部署运维、人工服务** 分开报价。上面的项目可用于独立复算 token/API 硬成本，剩下的才是乙方真实服务价值和风险责任。
 
 完整文件同步保留在 [`docs/llm-price-projects.md`](./docs/llm-price-projects.md)。
-
-## 本地快速运行
-
-```bash
-git clone https://github.com/1229119561Weike/chiveshield.git
-cd chiveshield
-npm run build
-npm start
-```
-
-打开：<http://localhost:5173>
-
-本地 API 骨架：
-
-```bash
-npm run api
-```
-
-默认监听：<http://localhost:8787>。
 
 ## 验证命令
 
@@ -167,7 +147,6 @@ scripts/    构建与 smoke 测试脚本
 ## 联系 / 交流
 
 - 官网 / 品牌主页：<https://chiveshield-intro.vercel.app>
-- 在线 Demo / 立即体验：<https://chiveshield-mvp.vercel.app>
 - GitHub 仓库：<https://github.com/1229119561Weike/chiveshield>
 
 ![微信二维码](docs/assets/wechat-qr.jpg)
