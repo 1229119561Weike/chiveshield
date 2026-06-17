@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local/runtime data
+data/
+tmp/
+*.log
+.DS_Store
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Vercel local project metadata
+.vercel/
+
+# Editor/OS
+.vscode/
+.idea/

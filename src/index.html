@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>避韭针 ChiveShield · 本地 MVP</title>
+    <meta name="description" content="本地可演示的 AI 服务采购防坑报告生成器" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="brand-lockup">
+          <span class="seal" aria-hidden="true">避</span>
+          <div>
+            <p class="eyebrow">ChiveShield Local MVP</p>
+            <h1 id="hero-title">把 AI 服务报价拆到能谈、能验、能交付。</h1>
+          </div>
+        </div>
+        <p class="hero-copy">输入一段业务需求，避韭针会在本地生成甲方决策版报告：服务类型、开源候选、报价梯度、风险点、验收清单和议价话术。当前版本默认使用 Demo 调研数据，不伪装成真实联网。</p>
+        <div class="provider-banner" id="providerBanner">搜索模式：Demo 数据源。真实联网需接入 SearchProvider。</div>
+      </section>
+
+      <section class="workspace-grid">
+        <form class="input-panel" id="demandForm">
+          <label for="demandInput">业务服务需求</label>
+          <textarea id="demandInput" rows="9" placeholder="例如：我想给公司做一个 AI 客服，能接入官网和企业微信，自动回答客户问题，并把复杂问题转人工。"></textarea>
+          <div class="input-actions">
+            <button type="button" class="quiet-button" id="sampleButton">填入示例</button>
+            <button type="submit" class="primary-button">生成免费预览</button>
+          </div>
+          <p class="hint">先生成免费预览；完整开源候选、报价梯度、验收清单和 Markdown 导出需解锁完整报告。当前真实测试价为 $1.40 USD（约等于原 ¥9.9 测试价）。</p>
+        </form>
+
+        <aside class="readiness-card" aria-labelledby="ready-title">
+          <p class="eyebrow">采购前先问清</p>
+          <h2 id="ready-title">三件事不能糊涂</h2>
+          <ul>
+            <li>哪些是开源项目或成熟工具，哪些是真定制？</li>
+            <li>报价是否拆分需求、部署、开发、模型调用和运维？</li>
+            <li>验收失败、数据导出、源码交接怎么约定？</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="preview-section" id="previewSection" hidden aria-labelledby="preview-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Free Preview</p>
+            <h2 id="preview-title">免费预览</h2>
+          </div>
+          <button type="button" class="primary-button" id="unlockButton">解锁完整报告 $1.40</button>
+        </div>
+        <div class="payment-grid">
+          <article class="report-card" id="previewSummaryCard"></article>
+          <article class="report-card" id="previewQuestionsCard"></article>
+          <article class="report-card">
+            <h3>完整报告包含</h3>
+            <ul>
+              <li>2-4 个开源项目候选与适配度</li>
+              <li>技术路线、报价梯度与异常信号</li>
+              <li>验收清单、议价话术和 Markdown 导出</li>
+            </ul>
+            <p class="hint">付款成功由 Matrix/后端确认；确认前不会生成完整报告。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="payment-section checkout-dossier" id="paymentSection" hidden aria-labelledby="payment-title">
+        <div class="checkout-header">
+          <div>
+            <p class="eyebrow">Secure Checkout</p>
+            <h2 id="payment-title">解锁完整采购报告</h2>
+            <p class="checkout-subtitle">付款由 Agent Revenue / Stripe 处理；避韭针只在后端确认付款后交付完整报告。</p>
+          </div>
+          <span class="status-pill" id="orderStatusPill">draft</span>
+        </div>
+
+        <div class="checkout-ledger" aria-label="订单与支付摘要">
+          <article class="checkout-card checkout-summary">
+            <p class="eyebrow">Order summary</p>
+            <h3>ChiveShield AI 服务采购防坑报告</h3>
+            <div class="price-lockup" aria-label="测试价格">
+              <strong>$1.40</strong>
+              <span>USD 测试价<br />约等于原 ¥9.9</span>
+            </div>
+            <div class="order-meta-list" id="orderMeta">等待创建订单。</div>
+          </article>
+
+          <article class="checkout-card checkout-action-card">
+            <p class="eyebrow">Payment</p>
+            <h3>安全支付</h3>
+            <p id="paymentLinkText">点击下方按钮打开 Stripe 托管支付页。付款完成后，请回到本页等待后端确认。</p>
+            <a class="primary-button link-button checkout-pay-button" id="livePaymentLink" href="https://buy.stripe.com/9B628s2J6bok1nH26h9AA0q" target="_blank" rel="noreferrer">前往 Stripe 安全支付</a>
+            <div class="payment-assurance" aria-label="支付保障说明">
+              <span>Stripe 托管收银台</span>
+              <span>Agent Revenue 入账</span>
+              <span>后端确认后交付</span>
+            </div>
+          </article>
+
+          <article class="checkout-card checkout-includes">
+            <p class="eyebrow">You receive</p>
+            <h3>完整报告交付</h3>
+            <ul class="deliverable-list">
+              <li>开源项目候选与适配度</li>
+              <li>报价梯度、风险点与异常信号</li>
+              <li>验收清单、议价话术和 Markdown 导出</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="checkout-verification">
+          <div>
+            <p class="eyebrow">Payment verification</p>
+            <h3>确认流程</h3>
+            <ol class="status-timeline" id="statusTimeline"></ol>
+          </div>
+          <div class="demo-panel">
+            <p class="eyebrow">Local demo</p>
+            <p>仅用于演示报告生成，不代表真实付款。</p>
+            <button type="button" class="quiet-button" id="mockPayButton">本地 demo：模拟支付成功</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section" id="reportSection" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">生成结果</p>
+            <h2>甲方决策版报告</h2>
+          </div>
+          <div class="export-actions">
+            <button type="button" class="quiet-button" id="copyMarkdownButton">复制 Markdown</button>
+            <button type="button" class="primary-button" id="downloadMarkdownButton">下载 Markdown</button>
+          </div>
+        </div>
+
+        <div class="score-strip" id="scoreStrip"></div>
+
+        <textarea id="markdownBuffer" aria-label="Markdown 报告内容" hidden></textarea>
+
+        <div class="report-grid">
+          <article class="report-card span-two" id="summaryCard"></article>
+          <article class="report-card" id="breakdownCard"></article>
+          <article class="report-card" id="routeCard"></article>
+          <article class="report-card span-two" id="projectsCard"></article>
+          <article class="report-card" id="riskCard"></article>
+          <article class="report-card" id="pricingCard"></article>
+          <article class="report-card" id="acceptanceCard"></article>
+          <article class="report-card" id="scriptsCard"></article>
+          <article class="report-card span-two" id="sourcesCard"></article>
+        </div>
+      </section>
+
+      <section class="provider-boundary" aria-labelledby="provider-title">
+        <p class="eyebrow">Provider 边界</p>
+        <h2 id="provider-title">支付、搜索、生成都要可追溯；demo/mock 不能装作真实发生。</h2>
+        <div class="boundary-grid">
+          <div>
+            <h3>PaymentProvider</h3>
+            <p><code>createPaymentLink(order)</code> 返回支付链接；真实托管版使用 Matrix receivable，metadata 必须包含 <code>order_id</code>。</p>
+          </div>
+          <div>
+            <h3>ReportGenerationProvider</h3>
+            <p><code>generate(order, demand)</code> 在订单 <code>paid</code> 后触发；本地 demo 使用内置规则，托管版使用 Matrix 模型与搜索能力。</p>
+          </div>
+          <div>
+            <h3>SearchProvider</h3>
+            <p><code>search({ queries, serviceType, locale })</code> 返回可追溯资料；没有 live provider 时只允许 DemoProvider。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

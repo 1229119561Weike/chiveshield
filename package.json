@@ -1,0 +1,20 @@
+{
+  "name": "chiveshield",
+  "version": "0.1.0",
+  "description": "Open-source AI service procurement anti-ripoff report generator.",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1229119561Weike/chiveshield.git"
+  },
+  "scripts": {
+    "start": "python3 -m http.server 5173 --directory src",
+    "api": "node server/index.js",
+    "build": "node scripts/build.js",
+    "test:smoke": "node scripts/smoke-test.js",
+    "test:api": "node scripts/api-smoke-test.js",
+    "test:serverless-store": "node scripts/serverless-store-smoke-test.js"
+  }
+}
